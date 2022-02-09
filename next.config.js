@@ -9,6 +9,8 @@ module.exports = {
   nextConfig,
   basePath: "/nexttest",
   images: {
+    loader: "akamai",
+    path: "",
     domains: ["http://i.annihil.us/u/prod/marvel/i/mg"],
   },
 };
