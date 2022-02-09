@@ -115,6 +115,7 @@ const Gallery: NextPage = () => {
       {data && (
         <div className={"container grid grid-cols-3 gap-2 mx-auto max-w-7xl"}>
           {data.map((comic) => {
+            const src = comic.thumbnail.path + "." + comic.thumbnail.extension;
             return (
               // <Link
               //   key={comic.id}
@@ -122,9 +123,12 @@ const Gallery: NextPage = () => {
               //   className="sm:hover:shadow-2xl ease-in-out"
               // >
               <Image
-                src={comic.thumbnail.path + "." + comic.thumbnail.extension}
+                loader={() => src}
+                src={src}
                 alt=""
                 key={comic.id}
+                height={"640"}
+                width={"420"}
               />
               // </Link>
             );

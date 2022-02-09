@@ -113,6 +113,8 @@ const Search: NextPage = () => {
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {data.map((comic, idx) => {
+              const src =
+                comic.thumbnail.path + "." + comic.thumbnail.extension;
               return (
                 <tr
                   key={idx}
@@ -121,12 +123,12 @@ const Search: NextPage = () => {
                 >
                   <td>
                     <Image
-                      src={
-                        comic.thumbnail.path + "." + comic.thumbnail.extension
-                      }
+                      loader={() => src}
+                      src={src}
                       alt=""
                       key={comic.id}
-                      className="h-48"
+                      height={"300"}
+                      width={"200"}
                     />
                   </td>
                   <td>
