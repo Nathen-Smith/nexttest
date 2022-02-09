@@ -115,7 +115,12 @@ const Gallery: NextPage = () => {
       {data && (
         <div className={"container grid grid-cols-3 gap-2 mx-auto max-w-7xl"}>
           {data.map((comic) => {
-            const src = comic.thumbnail.path + "." + comic.thumbnail.extension;
+            const src =
+              comic.thumbnail.path.slice(0, 4) +
+              "s" +
+              comic.thumbnail.path.slice(4) +
+              "." +
+              comic.thumbnail.extension;
             return (
               // <Link
               //   key={comic.id}

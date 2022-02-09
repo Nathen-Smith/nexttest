@@ -114,7 +114,11 @@ const Search: NextPage = () => {
           <tbody className="bg-white divide-y divide-gray-200">
             {data.map((comic, idx) => {
               const src =
-                comic.thumbnail.path + "." + comic.thumbnail.extension;
+                comic.thumbnail.path.slice(0, 4) +
+                "s" +
+                comic.thumbnail.path.slice(4) +
+                "." +
+                comic.thumbnail.extension;
               return (
                 <tr
                   key={idx}
