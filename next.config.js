@@ -8,4 +8,7 @@ module.exports = {
   assetPrefix: isProd ? "https://nathen-smith.github.io/nexttest" : "",
   nextConfig,
   basePath: "/nexttest",
+  images: {
+    domains: ["i.annihil.us"],
+  },
 };
