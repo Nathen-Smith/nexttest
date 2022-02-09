@@ -9,6 +9,7 @@ module.exports = {
   nextConfig,
   basePath: "/nexttest",
   images: {
+    loader: "imgix",
     domains: ["i.annihil.us"],
   },
 };

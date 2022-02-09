@@ -6,10 +6,6 @@ import { getCharsByComicUtil, ComicsData } from "../utils/apiUtils";
 import { classNames } from "../utils/classNames";
 // import { CircularProgress } from "@mui/material";
 
-interface updateComicsData {
-  updateComicsData: (arg: ComicsData[]) => void;
-}
-
 const Gallery: NextPage = () => {
   const [data, setData] = useState<ComicsData[]>();
   const updateComicsData = useCallback((data: ComicsData[]): void => {

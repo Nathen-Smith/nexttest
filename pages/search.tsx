@@ -4,9 +4,6 @@ import Image from "next/image";
 import React, { useEffect, useState, useCallback } from "react";
 import { searchComicsUtil, ComicsData } from "../utils/apiUtils";
 
-interface updateComicsData {
-  updateComicsData: (arg: ComicsData[]) => void;
-}
 const Search: NextPage = () => {
   const [input, setInput] = useState("");
   const [selection, setSort] = useState("title");
