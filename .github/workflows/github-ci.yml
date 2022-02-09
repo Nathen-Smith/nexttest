@@ -26,7 +26,6 @@ jobs:
             ${{ runner.os }}-yarn-
       - run: yarn install
       - run: yarn run build
-      - run: yarn run export
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.7
         with:
