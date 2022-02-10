@@ -5,6 +5,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { getCharsByComicUtil, ComicsData } from "../utils/apiUtils";
 import { classNames } from "../utils/classNames";
 import Navbar from "../components/Navbar";
+import ImgModal from "../components/ImgModal";
 // import { CircularProgress } from "@mui/material";
 
 const Gallery: NextPage = () => {
@@ -117,29 +118,14 @@ const Gallery: NextPage = () => {
         {data && (
           <div className={"container grid grid-cols-3 gap-2 mx-auto max-w-7xl"}>
             {data.map((comic) => {
-              const src =
-                comic.thumbnail.path.slice(0, 4) +
-                "s" +
-                comic.thumbnail.path.slice(4) +
-                "." +
-                comic.thumbnail.extension;
               return (
                 // <Link
                 //   key={comic.id}
                 //   to={`/marvel-api-app/detail/${comic.id}`}
                 //   className="sm:hover:shadow-2xl ease-in-out"
                 // >
-                <Image
-                  loader={() => src}
-                  src={src}
-                  alt=""
-                  key={comic.id}
-                  height={"640"}
-                  width={"420"}
-                  unoptimized={true}
-                  onClick={() => console.log("hi")}
-                  className="sm:hover:shadow-2xl ease-in-out cursor-pointer"
-                />
+                <ImgModal key={comic.id} comicData={comic} />
+
                 // </Link>
               );
             })}
