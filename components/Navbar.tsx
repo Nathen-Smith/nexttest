@@ -1,4 +1,4 @@
-import React, { useState, useCallback, Children } from "react";
+import React, { useState, useCallback, Children, useEffect } from "react";
 import Link from "next/link";
 import { ComicsData } from "../utils/apiUtils";
 import { classNames } from "../utils/classNames";
@@ -7,23 +7,16 @@ import { classNames } from "../utils/classNames";
 // import { faGithub } from "@fortawesome/free-brands-svg-icons";
 interface ChildrenProps {
   children: JSX.Element;
+  searchActive: boolean;
 }
 
-const Navbar: React.FC<ChildrenProps> = ({ children }) => {
+const Navbar: React.FC<ChildrenProps> = ({ children, searchActive }) => {
   const [navigation, setNavigation] = useState([
-    { name: "Search", to: "/", current: false },
-    { name: "Gallery", to: "/gallery", current: false },
+    { name: "Search", to: "/", current: searchActive },
+    { name: "Gallery", to: "/gallery", current: !searchActive },
+    { name: "modal", to: "/modal", current: !searchActive },
   ]);
-
-  const updateFieldChanged = (index: number) => {
-    let newArr = [...navigation]; // copying the old datas array
-    let len = newArr.length;
-    while (len--) {
-      newArr[len].current = false;
-    }
-    newArr[index].current = true;
-    setNavigation(newArr);
-  };
+  // there probably is a better way to handle this...
 
   const [data, setData] = useState<ComicsData[]>();
 

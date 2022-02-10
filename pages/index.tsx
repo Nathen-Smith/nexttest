@@ -30,7 +30,7 @@ const Search: NextPage = () => {
   //   navigate(`/marvel-api-app/detail/${id}`);
   // };
   return (
-    <Navbar>
+    <Navbar searchActive={true}>
       <div>
         <form className="max-w-7xl mx-auto bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
           <div className="mb-4">
@@ -136,6 +136,7 @@ const Search: NextPage = () => {
                         key={comic.id}
                         height={"300"}
                         width={"200"}
+                        unoptimized={true}
                       />
                     </td>
                     <td>

@@ -74,7 +74,7 @@ const Gallery: NextPage = () => {
   }, [activeSelections, updateComicsData]);
 
   return (
-    <Navbar>
+    <Navbar searchActive={false}>
       <div>
         <div className="max-w-7xl mx-auto bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
           <div className="block text-gray-700 text-sm font-bold mb-2">
@@ -136,6 +136,9 @@ const Gallery: NextPage = () => {
                   key={comic.id}
                   height={"640"}
                   width={"420"}
+                  unoptimized={true}
+                  onClick={() => console.log("hi")}
+                  className="sm:hover:shadow-2xl ease-in-out cursor-pointer"
                 />
                 // </Link>
               );
