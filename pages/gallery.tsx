@@ -4,6 +4,7 @@ import Image from "next/image";
 import React, { useEffect, useState, useCallback } from "react";
 import { getCharsByComicUtil, ComicsData } from "../utils/apiUtils";
 import { classNames } from "../utils/classNames";
+import Navbar from "../components/Navbar";
 // import { CircularProgress } from "@mui/material";
 
 const Gallery: NextPage = () => {
@@ -73,74 +74,76 @@ const Gallery: NextPage = () => {
   }, [activeSelections, updateComicsData]);
 
   return (
-    <div>
-      <div className="max-w-7xl mx-auto bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-        <div className="block text-gray-700 text-sm font-bold mb-2">
-          Find Comics by Character
-        </div>
-        {options.map((option, idx) => {
-          return (
-            <label className="flex inline-flex items-center p-1" key={idx}>
-              <button
-                onClick={() => {
-                  updateFieldChanged(idx);
-                }}
-                className={classNames(
-                  // "bg-transparent hover:bg-blue-500 text-blue-700 font-semibold "
-                  // "hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
-                  option.active
-                    ? "bg-blue-500 hover:bg-blue-700 text-white"
-                    : "bg-transparent hover:bg-blue-500 text-blue-700 hover:text-white border border-blue-500",
-                  " font-semibold py-2 px-4 rounded"
-                )}
-                aria-current={option.active ? "page" : undefined}
-                // className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
-              >
-                <span className="mx-2">{option.name}</span>
-              </button>
-            </label>
-          );
-        })}
-        <div className="block text-gray-400 text-sm mt-2">
-          Hint: Selecting multiple characters retrieves shared appearances
-        </div>
-      </div>
-      <div className="text-red-500 text-center font-semibold">{error}</div>
-      {loading && (
-        <div style={{ color: "#3B82F6", textAlign: "center" }}>
-          {/* <CircularProgress className="mx-auto" color="inherit" /> */}
-          Loading
-        </div>
-      )}
-      {data && (
-        <div className={"container grid grid-cols-3 gap-2 mx-auto max-w-7xl"}>
-          {data.map((comic) => {
-            const src =
-              comic.thumbnail.path.slice(0, 4) +
-              "s" +
-              comic.thumbnail.path.slice(4) +
-              "." +
-              comic.thumbnail.extension;
+    <Navbar>
+      <div>
+        <div className="max-w-7xl mx-auto bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+          <div className="block text-gray-700 text-sm font-bold mb-2">
+            Find Comics by Character
+          </div>
+          {options.map((option, idx) => {
             return (
-              // <Link
-              //   key={comic.id}
-              //   to={`/marvel-api-app/detail/${comic.id}`}
-              //   className="sm:hover:shadow-2xl ease-in-out"
-              // >
-              <Image
-                loader={() => src}
-                src={src}
-                alt=""
-                key={comic.id}
-                height={"640"}
-                width={"420"}
-              />
-              // </Link>
+              <label className="flex inline-flex items-center p-1" key={idx}>
+                <button
+                  onClick={() => {
+                    updateFieldChanged(idx);
+                  }}
+                  className={classNames(
+                    // "bg-transparent hover:bg-blue-500 text-blue-700 font-semibold "
+                    // "hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+                    option.active
+                      ? "bg-blue-500 hover:bg-blue-700 text-white"
+                      : "bg-transparent hover:bg-blue-500 text-blue-700 hover:text-white border border-blue-500",
+                    " font-semibold py-2 px-4 rounded"
+                  )}
+                  aria-current={option.active ? "page" : undefined}
+                  // className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+                >
+                  <span className="mx-2">{option.name}</span>
+                </button>
+              </label>
             );
           })}
+          <div className="block text-gray-400 text-sm mt-2">
+            Hint: Selecting multiple characters retrieves shared appearances
+          </div>
         </div>
-      )}
-    </div>
+        <div className="text-red-500 text-center font-semibold">{error}</div>
+        {loading && (
+          <div style={{ color: "#3B82F6", textAlign: "center" }}>
+            {/* <CircularProgress className="mx-auto" color="inherit" /> */}
+            Loading
+          </div>
+        )}
+        {data && (
+          <div className={"container grid grid-cols-3 gap-2 mx-auto max-w-7xl"}>
+            {data.map((comic) => {
+              const src =
+                comic.thumbnail.path.slice(0, 4) +
+                "s" +
+                comic.thumbnail.path.slice(4) +
+                "." +
+                comic.thumbnail.extension;
+              return (
+                // <Link
+                //   key={comic.id}
+                //   to={`/marvel-api-app/detail/${comic.id}`}
+                //   className="sm:hover:shadow-2xl ease-in-out"
+                // >
+                <Image
+                  loader={() => src}
+                  src={src}
+                  alt=""
+                  key={comic.id}
+                  height={"640"}
+                  width={"420"}
+                />
+                // </Link>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </Navbar>
   );
 };
 
