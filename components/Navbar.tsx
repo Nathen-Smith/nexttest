@@ -12,8 +12,8 @@ interface ChildrenProps {
 
 const Navbar: React.FC<ChildrenProps> = ({ children, searchActive }) => {
   const [navigation, setNavigation] = useState([
-    { name: "Search", to: "/", current: searchActive },
-    { name: "Gallery", to: "/gallery", current: !searchActive },
+    { name: "Gallery", to: "/", current: !searchActive },
+    { name: "Search", to: "/search", current: searchActive },
   ]);
   // there probably is a better way to handle this...
 

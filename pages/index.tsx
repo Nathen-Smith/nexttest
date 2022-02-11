@@ -2,162 +2,147 @@ import type { NextPage } from "next";
 import Image from "next/image";
 
 import React, { useEffect, useState, useCallback } from "react";
-import { searchComicsUtil, ComicsData } from "../utils/apiUtils";
-
+import { getCharsByComicUtil, ComicsData } from "../utils/apiUtils";
+import { classNames } from "../utils/classNames";
 import Navbar from "../components/Navbar";
+import ImgModal from "../components/ImgModal";
+// import { CircularProgress } from "@mui/material";
 
-const Search: NextPage = () => {
-  const [input, setInput] = useState("");
-  const [selection, setSort] = useState("title");
-  const [asc, setAsc] = useState(true);
+const Gallery: NextPage = () => {
   const [data, setData] = useState<ComicsData[]>();
   const updateComicsData = useCallback((data: ComicsData[]): void => {
     setData(data);
   }, []);
+  const [options, setOptions] = useState([
+    { name: "Thor", id: "1009664", active: false },
+    { name: "Captain America", id: "1009220", active: false },
+    { name: "Iron Man", id: "1009368", active: false },
+    { name: "Avengers", id: "1009165", active: false },
+    { name: "Spider-Man (Peter Parker)", id: "1009610", active: false },
+    { name: "Scarlet Witch", id: "1009562", active: false },
+    { name: "Hulk", id: "1009351", active: false },
+    { name: "Doctor Strange", id: "1009282", active: false },
+    { name: "Wolverine", id: "1009718", active: false },
+    { name: "Black Panther", id: "1009187", active: false },
+    { name: "Deadpool", id: "1009268", active: false },
+    { name: "Natasha Romanoff", id: "1009547", active: false },
+    { name: "Thanos", id: "1009652", active: false },
+    { name: "Guardians of the Galaxy", id: "1011299", active: false },
+  ]);
+  const [activeSelections, setActiveSelections] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string>();
+
+  const updateFieldChanged = (index: number) => {
+    let newArr = [...options]; // copying the old datas array
+    newArr[index].active = !newArr[index].active;
+    setOptions(newArr);
+  };
+
+  useEffect(() => {
+    let activeSelections = new Array<string>();
+    let len = options.length;
+    while (len--) {
+      if (options[len].active) {
+        activeSelections.push(options[len].id);
+      }
+    }
+    options && setActiveSelections(activeSelections);
+  }, [options]);
 
   useEffect(() => {
     const getData = async () => {
-      const res = await searchComicsUtil(input, selection, asc);
-      if (res) {
+      const res = await getCharsByComicUtil(activeSelections);
+      if (!res) {
+        setError("Internal server error. Try again");
+        setData(undefined);
+      } else {
         setData(res);
         updateComicsData(res);
+        if (res.length === 0) {
+          setError("No data returned");
+        } else {
+          setError("");
+        }
       }
+      setLoading(false);
     };
-    input && getData();
-  }, [input, selection, asc, updateComicsData]);
+    if (activeSelections && activeSelections.length !== 0) {
+      setLoading(true);
+      getData();
+    }
+  }, [activeSelections, updateComicsData]);
 
-  // const openDetailView = (id: number) => {
-  //   navigate(`/marvel-api-app/detail/${id}`);
-  // };
   return (
-    <Navbar searchActive={true}>
+    <Navbar searchActive={false}>
       <div>
-        <form className="max-w-7xl mx-auto bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="username"
-            >
-              Comic Search
-            </label>
-            <input
-              autoComplete="off"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="username"
-              type="text"
-              onChange={(e) => setInput(e.target.value)}
-            />
+        <div className="max-w-7xl mx-auto bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+          <div className="block text-gray-700 text-sm font-bold mb-2">
+            Find Comics by Character
           </div>
-          <div className="flex items-center justify-between">
-            <div className="w-full md:w-1/2 mb-6 md:mb-0">
-              <div className="relative">
-                <select
-                  className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded-l leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                  id="grid-state"
-                  onChange={(e) =>
-                    setSort(
-                      e.target.value === "Alphabetical" ? "title" : "onsaleDate"
-                    )
-                  }
+          {options.map((option, idx) => {
+            return (
+              <label className="flex inline-flex items-center p-1" key={idx}>
+                <button
+                  onClick={() => {
+                    updateFieldChanged(idx);
+                  }}
+                  className={classNames(
+                    // "bg-transparent hover:bg-blue-500 text-blue-700 font-semibold "
+                    // "hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+                    option.active
+                      ? "bg-blue-500 hover:bg-blue-700 text-white"
+                      : "bg-transparent hover:bg-blue-500 text-blue-700 hover:text-white border border-blue-500",
+                    " font-semibold py-2 px-4 rounded"
+                  )}
+                  aria-current={option.active ? "page" : undefined}
+                  // className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
                 >
-                  <option>Alphabetical</option>
-                  <option>On Sale Date</option>
-                </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                  <svg
-                    className="fill-current h-4 w-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                  </svg>
-                </div>
-              </div>
-            </div>
-            <div className="w-full md:w-1/2 mb-6 md:mb-0">
-              <div className="relative">
-                <select
-                  className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded-r leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                  id="grid-state"
-                  onChange={(e) =>
-                    setAsc(e.target.value === "Ascending" ? true : false)
-                  }
-                >
-                  <option>Ascending</option>
-                  <option>Descending</option>
-                </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                  <svg
-                    className="fill-current h-4 w-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                  </svg>
-                </div>
-              </div>
-            </div>
+                  <span className="mx-2">{option.name}</span>
+                </button>
+              </label>
+            );
+          })}
+          <div className="block text-gray-400 text-sm mt-2">
+            Hint: Selecting multiple characters retrieves shared appearances
           </div>
-        </form>
-        {data && input && (
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Image
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  On Sale Date
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {data.map((comic, idx) => {
-                const src =
-                  comic.thumbnail.path.slice(0, 4) +
-                  "s" +
-                  comic.thumbnail.path.slice(4) +
-                  "." +
-                  comic.thumbnail.extension;
-                return (
-                  <tr
-                    key={idx}
-                    className="cursor-pointer hover:bg-gray-200"
-                    // onClick={() => openDetailView(comic.id)}
-                  >
-                    <td>
-                      <Image
-                        loader={() => src}
-                        src={src}
-                        alt=""
-                        key={comic.id}
-                        height={"300"}
-                        width={"200"}
-                        unoptimized={true}
-                      />
-                    </td>
-                    <td>
-                      <div className="text-sm font-medium text-gray-900">
-                        {comic.title!!}
-                      </div>
-                    </td>
-                    <td>
-                      <div className="text-sm font-medium text-gray-900">
-                        {comic.dates[0].date!!}
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+        </div>
+        <div className="text-red-500 text-center font-semibold">{error}</div>
+        {loading && (
+          <div style={{ color: "#3B82F6", textAlign: "center" }}>
+            {/* <CircularProgress className="mx-auto" color="inherit" /> */}
+            Loading
+          </div>
+        )}
+        {data && (
+          <div
+            className={
+              "container grid grid-cols-3 gap-2 gap-y-1 mx-auto max-w-7xl"
+            }
+          >
+            {data.map((comic) => {
+              return (
+                // <Link
+                //   key={comic.id}
+                //   to={`/marvel-api-app/detail/${comic.id}`}
+                //   className="sm:hover:shadow-2xl ease-in-out"
+                // >
+                <ImgModal
+                  key={comic.id}
+                  comicData={comic}
+                  h={640}
+                  w={420}
+                  hover={true}
+                />
+
+                // </Link>
+              );
+            })}
+          </div>
         )}
       </div>
     </Navbar>
   );
 };
 
-export default Search;
+export default Gallery;

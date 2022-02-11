@@ -5,17 +5,23 @@ export interface ComicsData {
   id: number;
   title: string;
   description: string;
-  pageCount: number;
   thumbnail: {
     extension: string;
     path: string;
   };
-  characters: {
+  characters?: {
     returned: number;
     items: [{ name: string; role: string }];
   };
   modified: string;
   dates: [{ date: string; type: string }];
+  images: [
+    {
+      extension: string;
+      path: string;
+    }
+  ];
+  modalActive: boolean;
 }
 
 interface ComicsRes {
@@ -58,7 +64,6 @@ export const searchComicsUtil = async (
         !asc ? `-` : ``
       }${selection}&limit=6&${publicKeyParam}`
     );
-    // console.log(res.data);
     return res.data.data.results;
   } catch (err) {
     return null;

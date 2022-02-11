@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import Image from "next/image";
 
@@ -6,10 +6,23 @@ import type { ComicsData } from "../utils/apiUtils";
 
 interface ChildrenProps {
   comicData: ComicsData;
+  h: number;
+  w: number;
+  hover: boolean;
+  openFunc?: boolean;
 }
 
-const ImgModal: React.FC<ChildrenProps> = ({ comicData }) => {
+const ImgModal: React.FC<ChildrenProps> = ({
+  comicData,
+  h,
+  w,
+  hover,
+  openFunc,
+}) => {
   const [open, setOpen] = useState(false);
+  useEffect(() => {
+    if (typeof openFunc != "undefined") setOpen(openFunc);
+  }, [openFunc]);
 
   // const cancelButtonRef = useRef(null);
   const src =
@@ -35,24 +48,35 @@ const ImgModal: React.FC<ChildrenProps> = ({ comicData }) => {
     }
   };
 
-  const comicImg = (
+  interface ComicImgProps {
+    height: number;
+    width: number;
+    hover: boolean;
+  }
+
+  const ComicImg: React.FC<ComicImgProps> = ({ height, width, hover }) => (
     <Image
       loader={() => src}
       src={src}
       alt=""
-      height={"640"}
-      width={"420"}
+      height={height}
+      width={width}
       unoptimized={true}
-      onClick={() => setOpen(!open)}
-      className="sm:hover:shadow-2xl ease-in-out cursor-pointer mx-auto"
+      onClick={() => {
+        if (typeof openFunc == "undefined") setOpen(!open);
+      }}
+      className={`${
+        hover && "sm:hover:shadow-2xl ease-in-out cursor-pointer"
+      }   mx-auto`}
     />
   );
+
   return (
     <div>
       <Transition.Root show={open} as={Fragment}>
         <Dialog
           as="div"
-          className="fixed z-10 inset-0 overflow-y-auto"
+          className="fixed z-50 inset-0 overflow-y-auto"
           // initialFocus={cancelButtonRef}
           onClose={setOpen}
         >
@@ -66,7 +90,7 @@ const ImgModal: React.FC<ChildrenProps> = ({ comicData }) => {
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+              <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity cursor-pointer" />
             </Transition.Child>
 
             {/* This element is to trick the browser into centering the modal contents. */}
@@ -87,17 +111,19 @@ const ImgModal: React.FC<ChildrenProps> = ({ comicData }) => {
             >
               <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
                 <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                  <div className="mx-auto justify-center flex flex-col text-center mt-3 sm:mt-0 sm:ml-4 sm:text-left">
-                    <h3 className="text-lg text-center leading-6 font-medium text-gray-900">
+                  <div className="mx-auto justify-center flex flex-col text-center mt-3 sm:mt-0 sm:text-left">
+                    {/* </div> */}
+                    <h3 className="text-lg text-center font-medium text-gray-900">
                       {comicData.title}
                     </h3>
-                    {comicImg}
-                    {/* </div> */}
+                    <ComicImg height={610} width={400} hover={false} />
+                    {charList() && (
+                      <div className="text-lg font-medium text-gray-900">
+                        Featuring: {charList()}
+                      </div>
+                    )}
                     <div className="text-left text-md max-w-7xl mx-auto">
                       {comicData.description}
-                    </div>
-                    <div className="text-lg font-medium text-gray-900 my-2 max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
-                      Character List: {charList()}
                     </div>
                   </div>
                 </div>
@@ -106,9 +132,13 @@ const ImgModal: React.FC<ChildrenProps> = ({ comicData }) => {
           </div>
         </Dialog>
       </Transition.Root>
-      <div className="xl:hover:scale-110 transition-all xl:hover:absolute">
-        {comicImg}
-      </div>
+      {hover ? (
+        <div className="z-0 hover:z-10 xl:scale-100 xl:hover:scale-110 transition-all xl:hover:absolute">
+          <ComicImg height={h} width={w} hover={true} />
+        </div>
+      ) : (
+        <ComicImg height={h} width={w} hover={true} />
+      )}
     </div>
   );
 };
