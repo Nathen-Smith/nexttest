@@ -6,7 +6,7 @@ import { getCharsByComicUtil, ComicsData } from "../utils/apiUtils";
 import { classNames } from "../utils/classNames";
 import Navbar from "../components/Navbar";
 import ImgModal from "../components/ImgModal";
-// import { CircularProgress } from "@mui/material";
+import { CircularProgress } from "@mui/material";
 
 const Gallery: NextPage = () => {
   const [data, setData] = useState<ComicsData[]>();
@@ -110,8 +110,7 @@ const Gallery: NextPage = () => {
         <div className="text-red-500 text-center font-semibold">{error}</div>
         {loading && (
           <div style={{ color: "#3B82F6", textAlign: "center" }}>
-            {/* <CircularProgress className="mx-auto" color="inherit" /> */}
-            Loading
+            <CircularProgress className="mx-auto" color="inherit" />
           </div>
         )}
         {data && (

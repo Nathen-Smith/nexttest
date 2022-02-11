@@ -3,8 +3,8 @@ import Link from "next/link";
 import { ComicsData } from "../utils/apiUtils";
 import { classNames } from "../utils/classNames";
 // import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/outline";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faGithub } from "@fortawesome/free-brands-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGithub } from "@fortawesome/free-brands-svg-icons";
 interface ChildrenProps {
   children: JSX.Element;
   searchActive: boolean;
@@ -53,9 +53,9 @@ const Navbar: React.FC<ChildrenProps> = ({ children, searchActive }) => {
                 ))}
               </div>
             </div>
-            {/* <a href="https://github.com/Nathen-Smith/marvel-api-app">
+            <a href="https://github.com/Nathen-Smith/marvel-api-app">
               <FontAwesomeIcon icon={faGithub} size="2x" />
-            </a> */}
+            </a>
           </div>
         </div>
       </nav>
